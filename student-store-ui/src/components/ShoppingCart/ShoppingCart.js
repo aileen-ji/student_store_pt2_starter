@@ -20,6 +20,7 @@ export default function ShoppingCart({
   removeFromCart,
   getQuantityOfItemInCart,
   handleOnCheckout,
+  handleLogout
 }) {
   const navigate = useNavigate()
 
@@ -48,7 +49,7 @@ export default function ShoppingCart({
 
   return (
     <div className="ShoppingCart">
-      <Navbar />
+      <Navbar user={user} handleLogout={handleLogout}/>
       <SubNavbar
         user={user}
         activeCategory={activeCategory}

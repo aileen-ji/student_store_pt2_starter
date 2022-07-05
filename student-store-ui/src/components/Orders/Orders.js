@@ -27,6 +27,7 @@ export default function Orders({
   setActiveCategory,
   handleOnSearchInputChange,
   searchInputValue,
+  handleLogout
 }) {
   const ordersMapping = groupOrderDetailsByOrderId(orders)
 
@@ -34,7 +35,7 @@ export default function Orders({
 
   return (
     <div className="Orders">
-      <Navbar />
+      <Navbar user={user} handleLogout={handleLogout}/>
       <SubNavbar
         user={user}
         activeCategory={activeCategory}
@@ -42,6 +43,11 @@ export default function Orders({
         handleOnSearchInputChange={handleOnSearchInputChange}
         searchInputValue={searchInputValue}
       />
+      <div className="profile">
+            <h1>Email: {user.email}</h1>
+            <h2>Username: {user.username}</h2>
+            <h2>Created at: {user.createdAt}</h2>
+        </div>
       <div className="banner">
         <div className="content">
           <h2>Orders</h2>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import axios from "axios"
+import API from "../../services/apiClient"
 import "./Signup.css"
 
 export default function Signup({ user, setUser }) {
@@ -12,6 +12,7 @@ export default function Signup({ user, setUser }) {
     email: "",
     password: "",
     passwordConfirm: "",
+    username: ""
   })
 
   useEffect(() => {
@@ -53,25 +54,33 @@ export default function Signup({ user, setUser }) {
     } else {
       setErrors((e) => ({ ...e, passwordConfirm: null }))
     }
-
-    try {
-      const res = await axios.post("http://localhost:3001/auth/register", {
-        name: form.name,
-        email: form.email,
-        password: form.password,
-      })
-      if (res?.data?.user) {
-        setUser(res.data.user)
-      } else {
-        setErrors((e) => ({ ...e, form: "Something went wrong with registration" }))
-      }
-    } catch (err) {
-      console.log(err)
-      const message = err?.response?.data?.error?.message
-      setErrors((e) => ({ ...e, form: message ?? String(err) }))
-    } finally {
-      setIsProcessing(false)
+    
+    const {data, error} = await API.signupUser({email: form.email, password: form.password, name: form.name, username:form.username})
+    if(error) setErrors((e) => ({ ...e, form: error }))
+    if (data?.user){
+      setUser(data.user)
+      API.setToken(data.token)
     }
+    setIsProcessing(false)
+    console.log(data, error)
+    // try {
+    //   const res = await axios.post("http://localhost:3001/auth/register", {
+    //     name: form.name,
+    //     email: form.email,
+    //     password: form.password,
+    //   })
+    //   if (res?.data?.user) {
+    //     setUser(res.data.user)
+    //   } else {
+    //     setErrors((e) => ({ ...e, form: "Something went wrong with registration" }))
+    //   }
+    // } catch (err) {
+    //   console.log(err)
+    //   const message = err?.response?.data?.error?.message
+    //   setErrors((e) => ({ ...e, form: message ?? String(err) }))
+    // } finally {
+    //   setIsProcessing(false)
+    // }
   }
 
   return (
@@ -105,6 +114,18 @@ export default function Signup({ user, setUser }) {
               onChange={handleOnInputChange}
             />
             {errors.email && <span className="error">{errors.email}</span>}
+          </div>
+
+          <div className="input-field">
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              name="username"
+              placeholder="Enter your username"
+              value={form.username}
+              onChange={handleOnInputChange}
+            />
+            {errors.username && <span className="error">{errors.username}</span>}
           </div>
 
           <div className="input-field">

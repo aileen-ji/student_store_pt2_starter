@@ -20,6 +20,7 @@ export default function Home({
   addToCart,
   removeFromCart,
   getQuantityOfItemInCart,
+  handleLogout
 }) {
   const location = useLocation()
 
@@ -32,9 +33,10 @@ export default function Home({
     }
   }, [location.hash])
 
+  console.log(products)
   return (
     <div className="Home">
-      <Navbar />
+      <Navbar user={user} handleLogout={handleLogout}/>
       <SubNavbar
         user={user}
         activeCategory={activeCategory}
